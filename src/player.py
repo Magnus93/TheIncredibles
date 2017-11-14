@@ -18,6 +18,7 @@ class player:
         for event in  pygame.event.get():
         #    if event.type == pygame.QUIT:
          #       print("quit")
+            #Här funkar inte hold down key, nånting om att det bara läggs på queue?
             if event.type == pygame.KEYDOWN:
                 pressed_key = pygame.key.get_pressed()
                 if pressed_key[pygame.K_UP]:
