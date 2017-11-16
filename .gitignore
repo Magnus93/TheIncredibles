@@ -99,3 +99,9 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
