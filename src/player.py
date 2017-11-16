@@ -1,6 +1,7 @@
 import pygame
 import aux
 import math
+import shot
 
 
 class player:
@@ -21,8 +22,10 @@ class player:
         self.color = color
         self.radius = 10            # radius for collision
         self.lives = 3
-        self.shot_freq = 2.0
-        self.name = name
+        self.shot_freq = 6          # Shot frequency per secound
+        self.shots = []             # List all shots flying from the player
+        self.shot_counter = 0       # Counter to make sure player does not shot every frame
+        self.name = name            # Name of player
 
     # Top function that runs all other functions
     def run(self):
@@ -31,6 +34,12 @@ class player:
             self.update_position()
             self.check_wall_collision()
             self.draw()
+        for s in self.shots:
+            s.run()
+            pos = s.position
+            if pos[0] < 0 or pos[1] < 0 or 600 < pos[0] or 600 < pos[1]:
+                    self.shots.remove(s)
+                    del(s)
 
     def get_input(self):
         self.inpt.run()
@@ -39,6 +48,10 @@ class player:
             self.angle_speed -= self.angle_acceleration
         if self.inpt.right:
             self.angle_speed += self.angle_acceleration
+        if self.inpt.spacebar:
+            self.shot_counter += 1
+            if self.shot_counter%(60/self.shot_freq) == 1:
+                self.shoot()
 
     def update_position(self):
         self.angle += self.angle_speed
@@ -84,9 +97,11 @@ class player:
             aux.draw_polygon(space, self.position, shape, self.angle, (255,255,0))
         shape = [(0,-10),(-5,6),(5,6)]
         aux.draw_polygon(space, self.position, shape, self.angle, self.color)
+        aux.draw_polygon(space, self.position, shape, self.angle, (255,255,255), 1)
 
     def shoot(self):
-        pass
+        s = shot.shot(self.position, self.angle, self.color, space)
+        self.shots.append(s)
 
     def die(self):
         pass
