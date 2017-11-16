@@ -36,18 +36,19 @@ class player:
         self.inpt.run()
         self.boost = self.inpt.up
         if self.inpt.left:
-            print "LEft"
             self.angle_speed -= self.angle_acceleration
         if self.inpt.right:
-            print "self.right"
             self.angle_speed += self.angle_acceleration
 
     def update_position(self):
         self.angle += self.angle_speed
         if self.boost:
-            print "boost"
             x_speed = self.speed[0] + self.thrust*math.sin(self.angle)
             y_speed = self.speed[1] - self.thrust*math.cos(self.angle)
+            self.speed = (x_speed, y_speed)
+        elif self.inpt.down:
+            x_speed = self.speed[0] - 0.5*self.thrust*math.sin(self.angle)
+            y_speed = self.speed[1] + 0.5*self.thrust*math.cos(self.angle)
             self.speed = (x_speed, y_speed)
         x_pos = self.position[0] + self.speed[0]
         y_pos = self.position[1] + self.speed[1]

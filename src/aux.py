@@ -26,14 +26,17 @@ class create_input:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     self.up = True
+                if event.key == pygame.K_DOWN:
+                    self.down = True
                 if event.key == pygame.K_LEFT:
                     self.left = True
                 if event.key == pygame.K_RIGHT:
                     self.right = True
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
-                    print "self up up!"
                     self.up = False
+                if event.key == pygame.K_DOWN:
+                    self.down = False
                 if event.key == pygame.K_LEFT:
                     self.left = False
                 if event.key == pygame.K_RIGHT:
