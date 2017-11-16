@@ -101,5 +101,7 @@ ENV/
 .mypy_cache/
 
 
-#apple files
+# OS generated files #
+######################
 .DS_Store
+.DS_Store?
