@@ -2,7 +2,7 @@ import pygame
 import math
 
 
-def draw_polygon(surface, pivot_pos, shape_list, rotation, color):
+def draw_polygon(surface, pivot_pos, shape_list, rotation, color, width = 0):
     sin = math.sin(rotation)
     cos = math.cos(rotation)
     rotated_shape = []
@@ -10,7 +10,7 @@ def draw_polygon(surface, pivot_pos, shape_list, rotation, color):
         x = pivot_pos[0] + pos[0]*cos - pos[1]*sin
         y = pivot_pos[1] + pos[0]*sin + pos[1]*cos
         rotated_shape.append((x,y))
-    pygame.draw.polygon(surface, color, rotated_shape, 2)
+    pygame.draw.polygon(surface, color, rotated_shape, width)
 
 
 class create_input:
@@ -19,6 +19,7 @@ class create_input:
         self.down = False
         self.left = False
         self.right = False
+        self.spacebar = False
 
 
     def run(self):
@@ -32,6 +33,8 @@ class create_input:
                     self.left = True
                 if event.key == pygame.K_RIGHT:
                     self.right = True
+                if event.key == pygame.K_SPACE:
+                    self.spacebar = True
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
                     self.up = False
@@ -41,6 +44,8 @@ class create_input:
                     self.left = False
                 if event.key == pygame.K_RIGHT:
                     self.right = False
+                if event.key == pygame.K_SPACE:
+                    self.spacebar = False
 
 if __name__ == '__main__':
     screen = pygame.display.set_mode((600,600))
