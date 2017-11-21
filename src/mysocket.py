@@ -108,8 +108,8 @@ class mysocket:
 				clientsock, clientaddr = s.accept()
 				print('accept')
 				clientsock.settimeout(None)
-				player_id = clientsocket.recvdata(64)
-				print(player_id)
+				#player_id = clientsocket.recvdata(64)
+				
 			
 
 				#pos, pos1 = clientsocket.recv(p.position)
@@ -118,9 +118,9 @@ class mysocket:
 				#player_to_add = player(player_id, (pos,pos1), (col, col1), name)	
 				#s.add_player(p)
 				#print(s.players)
-				#buf = clientsock.recv(64)
-				#if buf>0:
-					#print buf
+				buf = clientsock.recv(64)
+				if buf>0:
+					print buf
 				
 				t = thereading.Thread(target = self.handle_player, args = [clientsock])
 				t.start()
