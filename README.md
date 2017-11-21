@@ -15,6 +15,7 @@ That coolest online game the world has ever seen.
 ## Deadline 30 nov - See other player on the screen
   - working send_status and receive_status
   - working world_status
+  - add players through server (send position through)
 
 ## Deadline 6 dec - Shoot at other player and kill them.
   - implement locks
