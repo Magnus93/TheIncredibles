@@ -3,6 +3,6 @@
 import socket
 
 clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-clientsocket.connect((socket.gethostname(), 8089))
+clientsocket.connect((socket.gethostbyname('localhost'), 8089))
 msg = raw_input('type anything and click enter... ')
 clientsocket.send(msg)
