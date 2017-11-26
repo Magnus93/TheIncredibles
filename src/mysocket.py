@@ -1,6 +1,6 @@
-
 import socket
-from player import *
+import pickle
+from player import * 
 
 
 class mysocket:
@@ -21,6 +21,7 @@ class mysocket:
 
 		self.handlers = {}
 		self.router = None
+	
 	def add_player(self, player):
 		a = player.player_id
 		self.players.update({'player'+str(a):a})
@@ -84,9 +85,10 @@ class mysocket:
 		s.bind(('', port))
 		s.listen(backlog)
 		return s
+	
 	def makeclientsocket(self, port):
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		clientsocket.connect(('localhost', 9666)) 
+		clientsocket.connect(('localhost', 8080)) 
 		msg = raw_input('type anything and click enter... ')
 		clientsocket.send(msg)
 
@@ -106,11 +108,16 @@ class mysocket:
 				print('Listening for connections....')
 				
 				clientsock, clientaddr = s.accept()
-				print('accept')
-				clientsock.settimeout(None)
-				#player_id = clientsocket.recvdata(64)
 				
-			
+				print('accept')
+				
+				clientsock.settimeout(None)
+				
+
+				playr=clientsock.recv(4096)
+				unpickled_playr=pickle.loads(playr)
+				print unpickled_playr.position  # here's the position
+				
 
 				#pos, pos1 = clientsocket.recv(p.position)
 				#col,col1 = clientsocket.recv(p.color)
@@ -118,9 +125,10 @@ class mysocket:
 				#player_to_add = player(player_id, (pos,pos1), (col, col1), name)	
 				#s.add_player(p)
 				#print(s.players)
-				buf = clientsock.recv(64)
-				if buf>0:
-					print buf
+				
+				#buf = clientsock.recv(64)
+				#if buf>0:
+				#	print buf
 				
 				t = thereading.Thread(target = self.handle_player, args = [clientsock])
 				t.start()
@@ -136,7 +144,7 @@ class mysocket:
 		print('Main loop exiting')
 		s.close()
 
-s = mysocket(3, 9666, None, None)
+s = mysocket(3, 8080, None, None)
 p = player(1, (300,300), (255,0,255), "Nea") 
 s.add_player(p)
 
