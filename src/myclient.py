@@ -19,4 +19,4 @@ def makeclientsocket(port):
 
 
 while True:
-	makeclientsocket(8080)
+	makeclientsocket(9666)
