@@ -86,7 +86,7 @@ class mysocket:
 		return s
 	def makeclientsocket(self, port):
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		clientsocket.connect(('localhost', 8080))
+		clientsocket.connect(('localhost', 9666)) 
 		msg = raw_input('type anything and click enter... ')
 		clientsocket.send(msg)
 
@@ -136,7 +136,7 @@ class mysocket:
 		print('Main loop exiting')
 		s.close()
 
-s = mysocket(3, 8080, None, None)
+s = mysocket(3, 9666, None, None)
 p = player(1, (300,300), (255,0,255), "Nea") 
 s.add_player(p)
 
