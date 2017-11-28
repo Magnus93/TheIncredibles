@@ -9,8 +9,8 @@ def makeclientsocket(port):
 		#use port 9666 for demo! change port number also in mysocket when demo-ing
 		#clientsocket.connect(('130.238.55.70', port))
 
-		clientsocket.connect(('104.196.165.56', port))
-		#clientsocket.connect((socket.gethostbyname('localhost'), port))
+		#clientsocket.connect(('104.196.165.56', port))  #use 9666 for demo & GOOGLE VM IP
+		clientsocket.connect((socket.gethostbyname('localhost'), port))
 		
 		msg = raw_input('type anything and click enter... ')
 		#clientsocket.send(msg)
@@ -18,7 +18,12 @@ def makeclientsocket(port):
 		p = player(player_id=1, position=(300,300), color=(255,0,255), name='Nea') 
 		pl=pickle.dumps(p)
 		clientsocket.send(pl)
+		
+
+		playerlist=clientsocket.recv(4096)
+		unpl_playerlist=pickle.loads(playerlist)
+		print unpl_playerlist
 
 
 while True:
-	makeclientsocket(9666)
+	makeclientsocket(8080)  

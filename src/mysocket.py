@@ -1,5 +1,6 @@
 import socket
 import pickle
+from collections import defaultdict 
 from player import * 
 
 
@@ -23,8 +24,12 @@ class mysocket:
 		self.router = None
 	
 	def add_player(self, player):
-		a = player.player_id
-		self.players.update({'player'+str(a):a})
+		#a = player.player_id
+		#x=defaultdict(list)
+		#self.players[a].append(player) #.position, player.color, player.lives
+		
+		self.players.update({'player'+str(player.player_id):player})
+		
 		print (self.players)
 
 	def handle_player(self, clientsock):
@@ -93,6 +98,10 @@ class mysocket:
 		clientsocket.send(msg)
 
 
+	def sendplayerlist():
+		player_list=pickle.dumps(s.players['player1'])
+		clientsock.send(player_list)
+		
 	def mainloop(self):
 		s = self.makeserversocket(self.serverport)
 		s.settimeout(2)
@@ -118,6 +127,10 @@ class mysocket:
 				unpickled_playr=pickle.loads(playr)
 				print unpickled_playr.position  # here's the position
 				
+				s.sendplayerlist()
+
+				#if new 
+				#add_player(playr)
 
 				#pos, pos1 = clientsocket.recv(p.position)
 				#col,col1 = clientsocket.recv(p.color)
@@ -146,8 +159,11 @@ class mysocket:
 
 s = mysocket(3, 8080, None, None)
 p = player(1, (300,300), (255,0,255), "Nea") 
+p2 = player(2, (310,300), (255,0,255), "Nea") 
 s.add_player(p)
-
+s.add_player(p2)
+print('this is the list of players')
+print( s.players)
 s.mainloop()
 s.handle_player(s)
 	
