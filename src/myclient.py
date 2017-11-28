@@ -8,7 +8,9 @@ def makeclientsocket(port):
 		#For demo: IP of socket needs to be hardcoded (1. remove comment on this line and 2. comment out the next line for demo-ing)
 		#use port 9666 for demo! change port number also in mysocket when demo-ing
 		#clientsocket.connect(('130.238.55.70', port))
-		clientsocket.connect((socket.gethostbyname('localhost'), port))
+
+		clientsocket.connect(('104.196.165.56', port))
+		#clientsocket.connect((socket.gethostbyname('localhost'), port))
 		
 		msg = raw_input('type anything and click enter... ')
 		#clientsocket.send(msg)
@@ -19,4 +21,4 @@ def makeclientsocket(port):
 
 
 while True:
-	makeclientsocket(8080)
+	makeclientsocket(9666)
