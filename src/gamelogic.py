@@ -1,7 +1,7 @@
 import math
-import server
 import sys
 import player
+#import server
 
 
 p1 = player(1,(20,20),(255,0,0) ,"player1")
@@ -24,3 +24,26 @@ def initiate_player_and_send(receiver_client):
         players_taken[i] = True
         # send player[i] to receiver_client
         pass
+
+
+
+def main():
+    # Wait for players to join
+
+    #Run game
+
+    for p in players:
+        for a in players:
+            if p.id == a.id:
+                pass
+            else:
+                p.check_hit_from_other(a)
+        pass
+
+    pass
+
+
+
+
+if __name__ == '__main__':
+    main()
