@@ -1,7 +1,7 @@
 import pygame
 import aux
 import math
-import shot
+import bullet
 
 
 class player:
@@ -22,9 +22,9 @@ class player:
         self.color = color
         self.radius = 10            # radius for collision
         self.lives = 3
-        self.shot_freq = 6          # Shot frequency per secound
-        self.shots = []             # List all shots flying from the player
-        self.shot_counter = 0       # Counter to make sure player does not shot every frame
+        self.bullet_freq = 6          # bullet frequency per secound
+        self.bullets = []             # List all bullets flying from the player
+        self.bullet_counter = 0       # Counter to make sure player does not bullet every frame
         self.name = name            # Name of player
 
     # Top function that runs all other functions
@@ -34,11 +34,11 @@ class player:
             self.update_position()
             self.check_wall_collision()
             self.draw()
-        for s in self.shots:
+        for s in self.bullets:
             s.run()
             pos = s.position
             if pos[0] < 0 or pos[1] < 0 or 600 < pos[0] or 600 < pos[1]:
-                    self.shots.remove(s)
+                    self.bullets.remove(s)
                     del(s)
 
     def get_input(self):
@@ -49,8 +49,8 @@ class player:
         if self.inpt.right:
             self.angle_speed += self.angle_acceleration
         if self.inpt.spacebar:
-            self.shot_counter += 1
-            if self.shot_counter%(60/self.shot_freq) == 1:
+            self.bullet_counter += 1
+            if self.bullet_counter%(60/self.bullet_freq) == 1:
                 self.shoot()
 
     def update_position(self):
@@ -100,8 +100,8 @@ class player:
         aux.draw_polygon(space, self.position, shape, self.angle, (255,255,255), 1)
 
     def shoot(self):
-        s = shot.shot(self.position, self.angle, self.color, space)
-        self.shots.append(s)
+        s = bullet.bullet(self.position, self.angle, self.color, space)
+        self.bullets.append(s)
 
     def die(self):
         pass
