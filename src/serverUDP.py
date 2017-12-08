@@ -32,6 +32,8 @@ class serverUDP(SocketServer.BaseRequestHandler):
         #update list of addresses (client addresses) from any incoming connection
         address_list[self.client_address[0]]= self.client_address
         #print address_list
+        
+        self.remove_dead_player(player_list)
         players_pickled = pickle.dumps(player_list)
 
         #socket.sendto(data.upper(), self.client_address)
@@ -43,7 +45,12 @@ class serverUDP(SocketServer.BaseRequestHandler):
             #send all players not just data.upper
             socket.sendto(players_pickled, address_list[k])  #data.upper()
 
-
+    def remove_dead_player(self, player_list):
+        for key in player_list.copy().iterkeys():
+            player = player_list[key]
+            if (player.lives < 1):
+                del player_list[key]
+        return player_list
 
 def start_server():
     global player_list, address_list
@@ -53,3 +60,7 @@ def start_server():
     HOST, PORT = "localhost", 8080
     server = SocketServer.UDPServer((HOST, PORT), serverUDP)
     server.serve_forever()
+
+
+start_server()
+#server.handle()
