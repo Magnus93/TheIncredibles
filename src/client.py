@@ -1,8 +1,8 @@
 import socket
 import sys
 import pickle
-from collections import defaultdict 
-from player import * 
+from collections import defaultdict
+from player import *
 
 #source: https://pymotw.com/2/socket/udp.html
 # Create a UDP socket
@@ -10,11 +10,11 @@ class client:
     def __init__(self):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.server_address = ('localhost', 8080)
-    #change when logic for creating a player from user input is ready, 
+    #change when logic for creating a player from user input is ready,
     #asking for id now to be able to test the connection for several players
         my_id = raw_input("What's your id?")
         self.player = player(int(my_id), (300,300), (255,0,255), "Valeria")
-        self.list_of_players = {self.player.player_id:self.player}
+        self.list_of_players = {self.player.id:self.player}
 
 
     def start_client(self):
@@ -23,12 +23,12 @@ class client:
             try:
                 self.send_player()
 
-                
+
                 self.receive_players()
                 #uncomment the line below to avoid an infinite loop
                 #self.player.lives = self.player.lives - 1
-                
-                
+
+
             except KeyboardInterrupt:
                 raise
         print("player is dead")
@@ -46,15 +46,15 @@ class client:
         #save current position of the player
         old_position = self.player.position
         #update the player belonging to the client with the details from server
-        self.player = unpickled_list[self.player.player_id]
-        #set the position of the updated player to the old position 
+        self.player = unpickled_list[self.player.id]
+        #set the position of the updated player to the old position
         self.player.position = old_position
-        #update player in the list received from server 
-        unpickled_list[self.player.player_id] = self.player
-        #update the list of players of the client with the list received from the server 
+        #update player in the list received from server
+        unpickled_list[self.player.id] = self.player
+        #update the list of players of the client with the list received from the server
         self.list_of_players.update(unpickled_list)
         print >>sys.stderr, 'received "%s"' % self.list_of_players
-        #print(str(unpickled_list[self.player.player_id].position))
+        #print(str(unpickled_list[self.player.id].position))
 
 
 

@@ -2,8 +2,8 @@ import SocketServer
 #import socket
 import sys
 import pickle
-from collections import defaultdict 
-from player import * 
+from collections import defaultdict
+from player import *
 
 class serverUDP(SocketServer.BaseRequestHandler):
 
@@ -19,12 +19,12 @@ class serverUDP(SocketServer.BaseRequestHandler):
     def handle(self):
         data = self.request[0].strip()
         unpickled_data= pickle.loads(data)
-#       print unpickled_data.player_id
+#       print unpickled_data.id
         #update list of known players from any incoming data
 
-        player_list[unpickled_data.player_id]=unpickled_data
+        player_list[unpickled_data.id]=unpickled_data
         print "in my player list now: " + str( player_list) +"\n"
-        
+
         socket = self.request[1]
         #print "{} wrote:".format(self.client_address[0])
         #print data
@@ -32,7 +32,7 @@ class serverUDP(SocketServer.BaseRequestHandler):
         #update list of addresses (client addresses) from any incoming connection
         address_list[self.client_address[0]]= self.client_address
         #print address_list
-        
+
         self.remove_dead_player(player_list)
         players_pickled = pickle.dumps(player_list)
 
