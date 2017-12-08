@@ -1,7 +1,7 @@
 import pygame
 import math
 
-class shot:
+class bullet:
     def __init__(self, position, angle, color, surface):
         self.position = position
         self.angle = angle
