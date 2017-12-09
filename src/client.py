@@ -3,6 +3,7 @@ import sys
 import pickle
 from collections import defaultdict
 from player import *
+import game
 
 #source: https://pymotw.com/2/socket/udp.html
 # Create a UDP socket
@@ -15,6 +16,7 @@ class client:
     #asking for id now to be able to test the connection for several players
         self.player = None
         self.list_of_players = None
+        self.local_game = game.local_game()
 
     def setup_player(self):
         name = raw_input("Name: ")    
@@ -25,7 +27,7 @@ class client:
     def start_client(self):
         #client_for_player = client();
         self.setup_player()
-
+        game_started = False
         # Join game
         joined = False
         while(not joined):
@@ -40,6 +42,9 @@ class client:
                         if p.name == self.player.name:
                             self.player.id = p.id
                             joined = True 
+
+                            if self.player.id == self.num_player-1:
+                                game_started = True
                 #uncomment the line below to avoid an infinite loop
                 #self.player.lives = self.player.lives - 1
 
@@ -48,18 +53,21 @@ class client:
                 raise
         
         # Wainting for everyone to join
-        game_started = False
-        while (not game_started):
-            self.receive_players()
-            if self.list_of_players[-1].name != "player"+str(self.num_player-1):
-                game_started = True
+        if game_started == False:
+            while (not game_started):
+                print "here"
+                self.receive_players()
+                if self.list_of_players[-1].name != "player"+str(self.num_player-1):
+                    game_started = True
 
 
         # Run Game
 
         while True:
-            
-            pass
+            print "Game starting"
+            self.send_player()
+            self.receive_players()
+            self.list_of_players = self.local_game.run(self.list_of_players, self.player.id)
 
 
         print("player is dead")
@@ -78,6 +86,7 @@ class client:
         unpickled_list=pickle.loads(data)
         #update the list of players of the client with the list received from the server
         self.list_of_players = unpickled_list
+        print "list_of_players: "+str(self.list_of_players)
         for lp in self.list_of_players:
             print str(lp)
         #print str(list_of_players[0])+str( list_of_players[1])+str(list_of_players[2]) +str(list_of_players[3])+"\n"

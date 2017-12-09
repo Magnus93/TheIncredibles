@@ -37,12 +37,12 @@ class player:
 
 
     # Top function that runs all other functions
-    def run(self):
+    def run(self, screen, space, sidebar):
         self.get_input()
         if self.lives > 0:
             self.update_position()
             self.check_wall_collision()
-            self.draw()
+            self.draw(screen, space, sidebar)
         for s in self.bullets:
             s.run()
             pos = s.position
@@ -99,7 +99,7 @@ class player:
             elif self.position[1] > upper_limit:
                 self.position = (self.position[0], upper_limit)
 
-    def draw(self):
+    def draw(self, screen, space, sidebar):
         if (self.immortal_counter/10)%2 == 0:
             self.pos = (int(self.position[0]), int(self.position[1]))
             pygame.draw.circle(space, (70,70,70), self.pos, self.radius, 1)

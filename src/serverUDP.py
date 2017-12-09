@@ -27,7 +27,7 @@ class serverUDP(SocketServer.BaseRequestHandler):
                 if not gl.players_taken[i]:
                     break
 
-            if gl.players_taken == [True]*4:
+            if gl.players_taken == [True]*gl.num_player:
                 print("Game is full")
                 pass
             else:
@@ -48,8 +48,11 @@ class serverUDP(SocketServer.BaseRequestHandler):
         #gl.player_list[unpickled_data.id] = unpickled_data
 
         socket = self.request[1]
-       
 
+        if gl.players_taken == [True]*gl.num_player:
+            print("game started")
+            # Check collisions for gl.player_list
+            #gl.player_list
 
         #update list of addresses (client addresses) from any incoming connection
         #address_list[self.client_address[0]]= self.client_address
