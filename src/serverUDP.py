@@ -4,6 +4,7 @@ import sys
 import pickle
 from collections import defaultdict
 from player import *
+import gamelogic
 
 class serverUDP(SocketServer.BaseRequestHandler):
 
@@ -21,42 +22,67 @@ class serverUDP(SocketServer.BaseRequestHandler):
         unpickled_data= pickle.loads(data)
 #       print unpickled_data.id
         #update list of known players from any incoming data
+        if unpickled_data.id == -1:
+            for i in range(0,len(gl.players_taken)):
+                if not gl.players_taken[i]:
+                    break
 
-        player_list[unpickled_data.id]=unpickled_data
-        print "in my player list now: " + str( player_list) +"\n"
+            if gl.players_taken == [True]*4:
+                print("Game is full")
+                pass
+            else:
+                print "player request granted for id " + str(i)
+                gl.players_taken[i] = True
+                for p in gl.player_list:
+                    print "id "+str(p.id)
+              #  gl.player_list[i] = gl.players[i]
+                gl.player_list[i].name = unpickled_data.name 
+                print "i is "+str(i)
+                gl.player_list[i].id = i
+                print ""
+                print str(i)    
+                address_list[i] = self.client_address 
+        print "in my player list now: "
+        for p in gl.player_list:
+            print p 
+        #gl.player_list[unpickled_data.id] = unpickled_data
 
         socket = self.request[1]
-        #print "{} wrote:".format(self.client_address[0])
-        #print data
+       
+
 
         #update list of addresses (client addresses) from any incoming connection
-        address_list[self.client_address[0]]= self.client_address
+        #address_list[self.client_address[0]]= self.client_address
         #print address_list
 
-        self.remove_dead_player(player_list)
-        players_pickled = pickle.dumps(player_list)
+        #self.remove_dead_player(player_list)
+        players_pickled = pickle.dumps(gl.player_list)
 
         #socket.sendto(data.upper(), self.client_address)
         #print "sending to \n"
         #print self.client_address
         #print "= "
-        for k in address_list:
+
+        for addr in address_list:
             #print address_list[k]
             #send all players not just data.upper
-            socket.sendto(players_pickled, address_list[k])  #data.upper()
+            if addr:
+                socket.sendto(players_pickled, addr)  #data.upper()
 
     def remove_dead_player(self, player_list):
-        for key in player_list.copy().iterkeys():
-            player = player_list[key]
+        for key in gl.player_list.copy().iterkeys():
+            player = gl.player_list[key]
             if (player.lives < 1):
-                del player_list[key]
-        return player_list
+                del gl.player_list[key]
+        return gl.player_list
 
 def start_server():
-    global player_list, address_list
-    player_list={}
-    address_list={}
+    
+    global address_list
+    global gl
     #new= MyUDPHandler()
+    gl = gamelogic.gamelogic()
+    address_list=[None]*gl.num_player
     HOST, PORT = "localhost", 8080
     server = SocketServer.UDPServer((HOST, PORT), serverUDP)
     server.serve_forever()

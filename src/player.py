@@ -31,6 +31,11 @@ class player:
         self.immortal = False          # self.immortal is Lock
         self.immortal_counter = 0
 
+
+    def __str__(self):
+        return "\n"+ str(self.id) + " " + self.name
+
+
     # Top function that runs all other functions
     def run(self):
         self.get_input()

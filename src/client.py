@@ -8,29 +8,60 @@ from player import *
 # Create a UDP socket
 class client:
     def __init__(self):
+        self.num_player = 2
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.server_address = ('localhost', 8080)
     #change when logic for creating a player from user input is ready,
     #asking for id now to be able to test the connection for several players
-        my_id = raw_input("What's your id?")
-        self.player = player(int(my_id), (300,300), (255,0,255), "Valeria")
-        self.list_of_players = {self.player.id:self.player}
+        self.player = None
+        self.list_of_players = None
 
+    def setup_player(self):
+        name = raw_input("Name: ")    
+        self.player = player(-1, (300,300), (255,0,255), name)
+        self.list_of_players = [None]*self.num_player
+        self.list_of_players[self.player.id] = self.player
 
     def start_client(self):
         #client_for_player = client();
-        while (self.player.lives > 0):
+        self.setup_player()
+
+        # Join game
+        joined = False
+        while(not joined):
             try:
+                print "Sending player"
                 self.send_player()
 
 
                 self.receive_players()
+                if self.player.id == -1:
+                    for p in self.list_of_players:
+                        if p.name == self.player.name:
+                            self.player.id = p.id
+                            joined = True 
                 #uncomment the line below to avoid an infinite loop
                 #self.player.lives = self.player.lives - 1
 
 
             except KeyboardInterrupt:
                 raise
+        
+        # Wainting for everyone to join
+        game_started = False
+        while (not game_started):
+            self.receive_players()
+            if self.list_of_players[-1].name != "player"+str(self.num_player-1):
+                game_started = True
+
+
+        # Run Game
+
+        while True:
+            
+            pass
+
+
         print("player is dead")
         self.send_player()
         self.sock.close()
@@ -46,8 +77,10 @@ class client:
         data, server = self.sock.recvfrom(4096)
         unpickled_list=pickle.loads(data)
         #update the list of players of the client with the list received from the server
-        self.list_of_players.update(unpickled_list)
-        print >>sys.stderr, 'received "%s"' % self.list_of_players
+        self.list_of_players = unpickled_list
+        for lp in self.list_of_players:
+            print str(lp)
+        #print str(list_of_players[0])+str( list_of_players[1])+str(list_of_players[2]) +str(list_of_players[3])+"\n"
 
 
 
