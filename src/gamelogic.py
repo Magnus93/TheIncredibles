@@ -1,8 +1,9 @@
 import math
 import sys
 import player
-#import server
+import serverUDP
 
+ID_REQUEST_JOIN = -1
 
 p1 = player(1,(20,20),(255,0,0) ,"player1")
 p2 = player(2,(40,20),(0,255,0) ,"player2")
@@ -28,7 +29,9 @@ def initiate_player_and_send(receiver_client):
 
 
 def main():
+    serv = serverUDP.serverUDP()
     # Wait for players to join
+
 
     #Run game
 

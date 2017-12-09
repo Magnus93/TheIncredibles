@@ -34,27 +34,21 @@ class client:
         print("player is dead")
         self.send_player()
         self.sock.close()
+
     def send_player(self):
         data = pickle.dumps(self.player)
         self.sock.sendto(data, self.server_address)
         print >>sys.stderr, 'sent player to server'
+
     def receive_players(self):
         print >>sys.stderr, 'waiting to receive'
         #receive list of players from server
         data, server = self.sock.recvfrom(4096)
         unpickled_list=pickle.loads(data)
-        #save current position of the player
-        old_position = self.player.position
-        #update the player belonging to the client with the details from server
-        self.player = unpickled_list[self.player.id]
-        #set the position of the updated player to the old position
-        self.player.position = old_position
-        #update player in the list received from server
-        unpickled_list[self.player.id] = self.player
         #update the list of players of the client with the list received from the server
         self.list_of_players.update(unpickled_list)
         print >>sys.stderr, 'received "%s"' % self.list_of_players
-        #print(str(unpickled_list[self.player.id].position))
+
 
 
 
