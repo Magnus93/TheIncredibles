@@ -16,55 +16,46 @@ class serverUDP(SocketServer.BaseRequestHandler):
     when sending data back via sendto().
     """
 
+    def handle_join(self, unpickled_data):
+        for i in range(0,len(gl.players_taken)):
+            if not gl.players_taken[i]:
+                break
+        if gl.players_taken == [True]*gl.num_player:
+            print "Game is full"
+        else:
+            print "player request granted for id " + str(i)
+            gl.players_taken[i] = True
+            for p in gl.player_list:
+                print "id "+str(p.id)
+            gl.player_list[i].name = unpickled_data.name
+            print "i is "+str(i)
+            gl.player_list[i].id = i
+            print ""
+            print str(i)
+            address_list[i] = self.client_address
+
+
     # handle(self): keeps the connection alive, adds
     def handle(self):
         data = self.request[0].strip()
         unpickled_data= pickle.loads(data)
-#       print unpickled_data.id
-        #update list of known players from any incoming data
-        if unpickled_data.id == -1:
-            for i in range(0,len(gl.players_taken)):
-                if not gl.players_taken[i]:
-                    break
 
-            if gl.players_taken == [True]*gl.num_player:
-                print("Game is full")
-                pass
-            else:
-                print "player request granted for id " + str(i)
-                gl.players_taken[i] = True
-                for p in gl.player_list:
-                    print "id "+str(p.id)
-              #  gl.player_list[i] = gl.players[i]
-                gl.player_list[i].name = unpickled_data.name 
-                print "i is "+str(i)
-                gl.player_list[i].id = i
-                print ""
-                print str(i)    
-                address_list[i] = self.client_address 
-        print "in my player list now: "
+
+        if unpickled_data.id == -1:
+            self.handle_join(unpickled_data)
+        elif gl.players_taken == [True]*gl.num_player:
+            print "Game running on server"
+            # Handle_game_running(unpickled_data)
+            #gl.player_list[unpickled_data.id] = unpickled_data  # <------ This fucks up?
+            # ----- Check collisions for gl.player_list
+
+        print "Players in game now: "
         for p in gl.player_list:
-            print p 
-        #gl.player_list[unpickled_data.id] = unpickled_data
+            print p
 
         socket = self.request[1]
 
-        if gl.players_taken == [True]*gl.num_player:
-            print("game started")
-            # Check collisions for gl.player_list
-            #gl.player_list
-
-        #update list of addresses (client addresses) from any incoming connection
-        #address_list[self.client_address[0]]= self.client_address
-        #print address_list
-
-        #self.remove_dead_player(player_list)
         players_pickled = pickle.dumps(gl.player_list)
-
-        #socket.sendto(data.upper(), self.client_address)
-        #print "sending to \n"
-        #print self.client_address
-        #print "= "
 
         for addr in address_list:
             #print address_list[k]
@@ -80,7 +71,7 @@ class serverUDP(SocketServer.BaseRequestHandler):
         return gl.player_list
 
 def start_server():
-    
+
     global address_list
     global gl
     #new= MyUDPHandler()

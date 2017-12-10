@@ -19,8 +19,8 @@ class client:
         self.local_game = game.local_game()
 
     def setup_player(self):
-        name = raw_input("Name: ")    
-        self.player = player(-1, (300,300), (255,0,255), name)
+        name = raw_input("Name: ")
+        self.player = player(-1, (300,300), (255,255,255), name)
         self.list_of_players = [None]*self.num_player
         self.list_of_players[self.player.id] = self.player
 
@@ -41,35 +41,31 @@ class client:
                     for p in self.list_of_players:
                         if p.name == self.player.name:
                             self.player.id = p.id
-                            joined = True 
+                            joined = True
 
                             if self.player.id == self.num_player-1:
                                 game_started = True
-                #uncomment the line below to avoid an infinite loop
-                #self.player.lives = self.player.lives - 1
-
 
             except KeyboardInterrupt:
                 raise
-        
+
         # Wainting for everyone to join
         if game_started == False:
             while (not game_started):
-                print "here"
+                print "Game Started"
                 self.receive_players()
                 if self.list_of_players[-1].name != "player"+str(self.num_player-1):
                     game_started = True
 
 
         # Run Game
-
         while True:
             print "Game starting"
+
             self.send_player()
             self.receive_players()
             self.list_of_players = self.local_game.run(self.list_of_players, self.player.id)
-
-
+            self.player = self.list_of_players[self.player.id]
         print("player is dead")
         self.send_player()
         self.sock.close()
