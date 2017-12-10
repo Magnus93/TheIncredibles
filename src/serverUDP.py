@@ -51,6 +51,7 @@ class serverUDP(SocketServer.BaseRequestHandler):
 
         if gl.players_taken == [True]*gl.num_player:
             print("game started")
+            #gl.player_list[unpickled_data.id] = unpickled_data
             # Check collisions for gl.player_list
             #gl.player_list
 
@@ -59,6 +60,10 @@ class serverUDP(SocketServer.BaseRequestHandler):
         #print address_list
 
         #self.remove_dead_player(player_list)
+        print str(unpickled_data.position)
+        print str(unpickled_data.id)
+        print str(unpickled_data.name)
+
         players_pickled = pickle.dumps(gl.player_list)
 
         #socket.sendto(data.upper(), self.client_address)

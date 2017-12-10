@@ -20,8 +20,10 @@ class local_game:
 		for p in player_list:
 			if p.id == my_id:
 				p.run(self.screen, self.space, self.sidebar)
+
 			else:
 				p.draw(self.screen, self.space, self.sidebar)
+				
         
 		self.screen.blit(self.space, (0,0))
 		self.screen.blit(self.sidebar, (600,0))
