@@ -22,7 +22,8 @@ class local_game:
 				p.run(self.screen, self.space, self.sidebar)
 
 			else:
-				p.draw(self.screen, self.space, self.sidebar)
+				if p.lives >0:
+					p.draw(self.screen, self.space, self.sidebar)
 				
         
 		self.screen.blit(self.space, (0,0))

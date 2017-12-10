@@ -108,7 +108,10 @@ class client:
                     
                     self.list_of_players[pl.id] = unpickled_list[pl.id]
                     self.list_of_players[pl.id].position = unpickled_list[pl.id].position
-            self.list_of_players[pl.id].lives = unpickled_list[pl.id].lives
+                    #if not self.immortal:
+                     #   self.list_of_players[pl.id].lives = unpickled_list[pl.id].lives
+                if not unpickled_list[pl.id].immortal:
+                    self.list_of_players[pl.id].lives = unpickled_list[pl.id].lives
         
         #for lp in self.list_of_players:
          #   print str(lp.position)

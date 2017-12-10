@@ -71,9 +71,13 @@ class serverUDP(SocketServer.BaseRequestHandler):
                 
 
         if self.check_collision(gl.player_list[0], gl.player_list[1]):
-            print ("krokc")
-            gl.player_list[0].lives -=1
-            gl.player_list[1].lives -=1
+            if not gl.player_list[0].immortal:
+                print ("krokc")
+                gl.player_list[0].lives -=1
+                if not gl.player_list[1].immortal:
+                    gl.player_list[1].lives -=1
+            ####Set immortal och immortal_timer#############
+            ############################################
         
 
         players_pickled = pickle.dumps(gl.player_list)
@@ -104,7 +108,7 @@ class serverUDP(SocketServer.BaseRequestHandler):
         y_distance = p1.position[1] - p2.position[1]
         distance = math.sqrt(x_distance**2 + y_distance**2)
         if distance < p1.radius+p2.radius:
-            return True
+           return True
         return False
             #tmp_speed = p1.speed
             #p1.speed = p2.speed
