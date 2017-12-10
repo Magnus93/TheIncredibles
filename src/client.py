@@ -98,7 +98,7 @@ class client:
         #receive list of players from server
         data, server = self.sock.recvfrom(4096)
         unpickled_list=pickle.loads(data)
-        print str(unpickled_list[0].position)
+        print str(unpickled_list[1].position) + str( unpickled_list[1].name)
         #update the list of players of the client with the list received from the server
         if self.game_started == False:
             self.list_of_players = unpickled_list

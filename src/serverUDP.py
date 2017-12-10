@@ -19,6 +19,7 @@ class serverUDP(SocketServer.BaseRequestHandler):
     # handle(self): keeps the connection alive, adds
     def handle(self):
         data = self.request[0].strip()
+        print str(data)
         unpickled_data= pickle.loads(data)
 #       print unpickled_data.id
         #update list of known players from any incoming data
@@ -35,6 +36,7 @@ class serverUDP(SocketServer.BaseRequestHandler):
                 gl.players_taken[i] = True
                 for p in gl.player_list:
                     print "id "+str(p.id)
+                    
               #  gl.player_list[i] = gl.players[i]
                 gl.player_list[i].name = unpickled_data.name 
                 print "i is "+str(i)
@@ -42,15 +44,16 @@ class serverUDP(SocketServer.BaseRequestHandler):
                 print ""
                 print str(i)    
                 address_list[i] = self.client_address 
-        print "in my player list now: "
-        for p in gl.player_list:
-            print p 
+        #print "in my player list now: "
+        #for p in gl.player_list:
+         #   print p 
         #gl.player_list[unpickled_data.id] = unpickled_data
 
         socket = self.request[1]
 
         if gl.players_taken == [True]*gl.num_player:
-            print("game started")
+            pass
+            #print("game started")
             #gl.player_list[unpickled_data.id] = unpickled_data
             # Check collisions for gl.player_list
             #gl.player_list
@@ -60,9 +63,14 @@ class serverUDP(SocketServer.BaseRequestHandler):
         #print address_list
 
         #self.remove_dead_player(player_list)
-        print str(unpickled_data.position)
-        print str(unpickled_data.id)
-        print str(unpickled_data.name)
+        
+
+        for p in gl.player_list:
+            if unpickled_data.id == p.id:
+                p.position = unpickled_data.position
+                print "here is fore lop"
+                print str(p)
+                print str(unpickled_data.position)
 
         players_pickled = pickle.dumps(gl.player_list)
 
@@ -75,6 +83,7 @@ class serverUDP(SocketServer.BaseRequestHandler):
             #print address_list[k]
             #send all players not just data.upper
             if addr:
+
                 socket.sendto(players_pickled, addr)  #data.upper()
 
     def remove_dead_player(self, player_list):
