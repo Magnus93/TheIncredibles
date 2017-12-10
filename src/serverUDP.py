@@ -70,6 +70,12 @@ class serverUDP(SocketServer.BaseRequestHandler):
                 p.position = unpickled_data.position
                 
 
+        if self.check_collision(gl.player_list[0], gl.player_list[1]):
+            print ("krokc")
+            gl.player_list[0].lives -=1
+            gl.player_list[1].lives -=1
+        
+
         players_pickled = pickle.dumps(gl.player_list)
 
         #socket.sendto(data.upper(), self.client_address)
@@ -90,6 +96,22 @@ class serverUDP(SocketServer.BaseRequestHandler):
             if (player.lives < 1):
                 del gl.player_list[key]
         return gl.player_list
+
+
+
+    def check_collision(self, p1, p2):
+        x_distance = p1.position[0] - p2.position[0]
+        y_distance = p1.position[1] - p2.position[1]
+        distance = math.sqrt(x_distance**2 + y_distance**2)
+        if distance < p1.radius+p2.radius:
+            return True
+        return False
+            #tmp_speed = p1.speed
+            #p1.speed = p2.speed
+            #p2.speed = tmp_speed
+            #p1.take_damage()
+            #p2.take_damage()
+
 
 def start_server():
     
