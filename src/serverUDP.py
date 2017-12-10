@@ -19,7 +19,7 @@ class serverUDP(SocketServer.BaseRequestHandler):
     # handle(self): keeps the connection alive, adds
     def handle(self):
         data = self.request[0].strip()
-        print str(data)
+        
         unpickled_data= pickle.loads(data)
 #       print unpickled_data.id
         #update list of known players from any incoming data
@@ -68,9 +68,7 @@ class serverUDP(SocketServer.BaseRequestHandler):
         for p in gl.player_list:
             if unpickled_data.id == p.id:
                 p.position = unpickled_data.position
-                print "here is fore lop"
-                print str(p)
-                print str(unpickled_data.position)
+                
 
         players_pickled = pickle.dumps(gl.player_list)
 
