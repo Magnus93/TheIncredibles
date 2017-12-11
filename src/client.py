@@ -110,6 +110,7 @@ class client:
                     self.list_of_players[pl.id].position = unpickled_list[pl.id].position
                     self.list_of_players[pl.id].angle = unpickled_list[pl.id].angle
                     self.list_of_players[pl.id].angle_speed = unpickled_list[pl.id].angle_speed
+                    self.list_of_players[pl.id].bullets = unpickled_list[pl.id].bullets
                     #if not self.immortal:
                      #   self.list_of_players[pl.id].lives = unpickled_list[pl.id].lives
                 if not unpickled_list[pl.id].immortal:
