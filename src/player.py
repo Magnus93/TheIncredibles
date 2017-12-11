@@ -15,7 +15,7 @@ class player:
 
         self.position = position            #     position
         self.speed = (0,0)                  #   d position/dt
-        self.thrust = 0.05                  # d^2 position/dt^2     (acceleration)
+        self.thrust = 0.03                  # d^2 position/dt^2     (acceleration)
 
         self.angle = 0                      #     angle
         self.angle_speed = 0                #   d angle/dt
@@ -72,10 +72,12 @@ class player:
             x_speed = self.speed[0] + self.thrust*math.sin(self.angle)
             y_speed = self.speed[1] - self.thrust*math.cos(self.angle)
             self.speed = (x_speed, y_speed)
+            
         elif self.inpt.down:
             x_speed = self.speed[0] - 0.5*self.thrust*math.sin(self.angle)
             y_speed = self.speed[1] + 0.5*self.thrust*math.cos(self.angle)
             self.speed = (x_speed, y_speed)
+            
         x_pos = self.position[0] + self.speed[0]
         y_pos = self.position[1] + self.speed[1]
         self.position = (x_pos, y_pos)

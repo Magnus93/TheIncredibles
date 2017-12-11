@@ -39,10 +39,10 @@ class serverUDP(SocketServer.BaseRequestHandler):
                     
               #  gl.player_list[i] = gl.players[i]
                 gl.player_list[i].name = unpickled_data.name 
-                print "i is "+str(i)
+                #print "i is "+str(i)
                 gl.player_list[i].id = i
-                print ""
-                print str(i)    
+                #print ""
+                #print str(i)    
                 address_list[i] = self.client_address 
         #print "in my player list now: "
         #for p in gl.player_list:

@@ -37,7 +37,7 @@ class client:
         joined = False
         while(not joined):
             try:
-                print "Sending player"
+                #print "Sending player"
                 self.send_player()
 
 
@@ -70,7 +70,7 @@ class client:
         # Run Game
 
         while True:
-            print "Game starting"
+            #print "Game starting"
             start = True
             self.send_player()
             
@@ -91,14 +91,14 @@ class client:
         self.player.update_position()
         data = pickle.dumps(self.player)
         self.sock.sendto(data, self.server_address)
-        print >>sys.stderr, 'sent player to server'
+        #print >>sys.stderr, 'sent player to server'
 
     def receive_players(self):
-        print >>sys.stderr, 'waiting to receive'
+        #print >>sys.stderr, 'waiting to receive'
         #receive list of players from server
         data, server = self.sock.recvfrom(4096)
         unpickled_list=pickle.loads(data)
-        print str(unpickled_list[1].position) + str( unpickled_list[1].name)
+        #print str(unpickled_list[1].position) + str( unpickled_list[1].name)
         #update the list of players of the client with the list received from the server
         if self.game_started == False:
             self.list_of_players = unpickled_list
@@ -108,6 +108,8 @@ class client:
                     
                     self.list_of_players[pl.id] = unpickled_list[pl.id]
                     self.list_of_players[pl.id].position = unpickled_list[pl.id].position
+                    self.list_of_players[pl.id].angle = unpickled_list[pl.id].angle
+                    self.list_of_players[pl.id].angle_speed = unpickled_list[pl.id].angle_speed
                     #if not self.immortal:
                      #   self.list_of_players[pl.id].lives = unpickled_list[pl.id].lives
                 if not unpickled_list[pl.id].immortal:
