@@ -125,7 +125,7 @@ class player:
         pass
 
     def shoot(self):
-        s = bullet.bullet(self.position, self.angle, self.color, space)
+        s = bullet.bullet(self.position, self.angle, self.color)
         self.bullets.append(s)
 
     def die(self):
