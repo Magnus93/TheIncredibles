@@ -13,7 +13,7 @@ class client:
     def __init__(self):
         self.num_player = 2
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.server_address = ('130.238.250.25', 8080)
+        self.server_address = ('localhost', 8080)
         self.game_started = False
     #change when logic for creating a player from user input is ready,
     #asking for id now to be able to test the connection for several players
@@ -78,17 +78,16 @@ class client:
             
             self.local_game.run(self.list_of_players, self.player.id)
             self.player = self.list_of_players[self.player.id]
-            
-            
-            
 
+            
 
         print("player is dead")
         self.send_player()
         self.sock.close()
 
     def send_player(self):
-        self.player.update_position()
+        #self.player.update_position()
+        print str(self.player.bullets)
         data = pickle.dumps(self.player)
         self.sock.sendto(data, self.server_address)
         #print >>sys.stderr, 'sent player to server'
@@ -107,10 +106,7 @@ class client:
                 if pl.id != self.player.id:
                     
                     self.list_of_players[pl.id] = unpickled_list[pl.id]
-                    self.list_of_players[pl.id].position = unpickled_list[pl.id].position
-                    self.list_of_players[pl.id].angle = unpickled_list[pl.id].angle
-                    self.list_of_players[pl.id].angle_speed = unpickled_list[pl.id].angle_speed
-                    self.list_of_players[pl.id].bullets = unpickled_list[pl.id].bullets
+                    print str(self.list_of_players[pl.id].angle)
                     #if not self.immortal:
                      #   self.list_of_players[pl.id].lives = unpickled_list[pl.id].lives
                 if not unpickled_list[pl.id].immortal:
@@ -128,4 +124,4 @@ class client:
 
 client_for_player = client()
 client_for_player.setup_player()
-client_for_player.start_client()
+client_for_player.start_client() 

@@ -68,6 +68,8 @@ class serverUDP(SocketServer.BaseRequestHandler):
         for p in gl.player_list:
             if unpickled_data.id == p.id:
                 p.position = unpickled_data.position
+                p.angle = unpickled_data.angle
+                p.bullets = unpickled_data.bullets
                 
 
         if self.check_collision(gl.player_list[0], gl.player_list[1]):
@@ -124,7 +126,7 @@ def start_server():
     #new= MyUDPHandler()
     gl = gamelogic.gamelogic()
     address_list=[None]*gl.num_player
-    HOST, PORT = "130.238.250.25", 8080
+    HOST, PORT = "localhost", 8080
     server = SocketServer.UDPServer((HOST, PORT), serverUDP)
     server.serve_forever()
 
