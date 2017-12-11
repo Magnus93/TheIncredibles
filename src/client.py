@@ -7,11 +7,14 @@ import game
 
 #source: https://pymotw.com/2/socket/udp.html
 # Create a UDP socket
+
+start = False
 class client:
     def __init__(self):
         self.num_player = 2
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.server_address = ('localhost', 8080)
+        self.game_started = False
     #change when logic for creating a player from user input is ready,
     #asking for id now to be able to test the connection for several players
         self.player = None
@@ -26,13 +29,15 @@ class client:
 
     def start_client(self):
         #client_for_player = client();
-        self.setup_player()
-        game_started = False
+
+
+
+
         # Join game
         joined = False
         while(not joined):
             try:
-                print "Sending player"
+                #print "Sending player"
                 self.send_player()
 
 
@@ -41,50 +46,73 @@ class client:
                     for p in self.list_of_players:
                         if p.name == self.player.name:
                             self.player.id = p.id
+                            self.player.position = p.position
                             joined = True
 
                             if self.player.id == self.num_player-1:
-                                game_started = True
+                                self.game_started = True
+
+                #uncomment the line below to avoid an infinite loop
+                #self.player.lives = self.player.lives - 1
+
 
             except KeyboardInterrupt:
                 raise
 
         # Wainting for everyone to join
-        if game_started == False:
-            while (not game_started):
-                print "Game Started"
+        if self.game_started == False:
+            while (not self.game_started):
                 self.receive_players()
                 if self.list_of_players[-1].name != "player"+str(self.num_player-1):
-                    game_started = True
+                    self.game_started = True
 
 
         # Run Game
         while True:
-            print "Game starting"
-
+            #print "Game starting"
+            start = True
             self.send_player()
+
             self.receive_players()
-            self.list_of_players = self.local_game.run(self.list_of_players, self.player.id)
+
+            self.local_game.run(self.list_of_players, self.player.id)
             self.player = self.list_of_players[self.player.id]
+
+
+
         print("player is dead")
         self.send_player()
         self.sock.close()
 
     def send_player(self):
+        #self.player.update_position()
+        print str(self.player.bullets)
         data = pickle.dumps(self.player)
         self.sock.sendto(data, self.server_address)
-        print >>sys.stderr, 'sent player to server'
+        #print >>sys.stderr, 'sent player to server'
 
     def receive_players(self):
-        print >>sys.stderr, 'waiting to receive'
+        #print >>sys.stderr, 'waiting to receive'
         #receive list of players from server
         data, server = self.sock.recvfrom(4096)
         unpickled_list=pickle.loads(data)
+        #print str(unpickled_list[1].position) + str( unpickled_list[1].name)
         #update the list of players of the client with the list received from the server
-        self.list_of_players = unpickled_list
-        print "list_of_players: "+str(self.list_of_players)
-        for lp in self.list_of_players:
-            print str(lp)
+        if self.game_started == False:
+            self.list_of_players = unpickled_list
+        else:
+            for pl in unpickled_list:
+                if pl.id != self.player.id:
+
+                    self.list_of_players[pl.id] = unpickled_list[pl.id]
+                    print str(self.list_of_players[pl.id].angle)
+                    #if not self.immortal:
+                     #   self.list_of_players[pl.id].lives = unpickled_list[pl.id].lives
+                if not unpickled_list[pl.id].immortal:
+                    self.list_of_players[pl.id].lives = unpickled_list[pl.id].lives
+
+        #for lp in self.list_of_players:
+         #   print str(lp.position)
         #print str(list_of_players[0])+str( list_of_players[1])+str(list_of_players[2]) +str(list_of_players[3])+"\n"
 
 
@@ -92,5 +120,7 @@ class client:
 
 
 
+
 client_for_player = client()
+client_for_player.setup_player()
 client_for_player.start_client()

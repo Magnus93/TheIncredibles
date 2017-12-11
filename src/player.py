@@ -15,7 +15,7 @@ class player:
 
         self.position = position            #     position
         self.speed = (0,0)                  #   d position/dt
-        self.thrust = 0.05                  # d^2 position/dt^2     (acceleration)
+        self.thrust = 0.03                  # d^2 position/dt^2     (acceleration)
 
         self.angle = 0                      #     angle
         self.angle_speed = 0                #   d angle/dt
@@ -44,7 +44,7 @@ class player:
             self.check_wall_collision()
             self.draw(screen, space, sidebar)
         for s in self.bullets:
-            s.run()
+            s.run(space)
             pos = s.position
             if pos[0] < 0 or pos[1] < 0 or 600 < pos[0] or 600 < pos[1]:
                     self.bullets.remove(s)
@@ -72,10 +72,12 @@ class player:
             x_speed = self.speed[0] + self.thrust*math.sin(self.angle)
             y_speed = self.speed[1] - self.thrust*math.cos(self.angle)
             self.speed = (x_speed, y_speed)
+            
         elif self.inpt.down:
             x_speed = self.speed[0] - 0.5*self.thrust*math.sin(self.angle)
             y_speed = self.speed[1] + 0.5*self.thrust*math.cos(self.angle)
             self.speed = (x_speed, y_speed)
+            
         x_pos = self.position[0] + self.speed[0]
         y_pos = self.position[1] + self.speed[1]
         self.position = (x_pos, y_pos)
@@ -110,6 +112,8 @@ class player:
             aux.draw_polygon(space, self.position, shape, self.angle, self.color)
             aux.draw_polygon(space, self.position, shape, self.angle, (255,255,255), 1)
             self.draw_player_stats(sidebar, (0, self.id*50))
+        for b in self.bullets:
+            b.draw(space)
 
     def draw_player_stats(self, surface, pos):
         name_text = font.render(self.name, 1, self.color)
@@ -121,7 +125,7 @@ class player:
         pass
 
     def shoot(self):
-        s = bullet.bullet(self.position, self.angle, self.color, space)
+        s = bullet.bullet(self.position, self.angle, self.color)
         self.bullets.append(s)
 
     def die(self):
@@ -176,8 +180,8 @@ if __name__ == '__main__':
         space.fill((51,51,51))
         sidebar.fill((26,26,26))
 
-        p1.run()                    # Run everyting with player (draw, calc pos, collision etc.)
-        p2.run()
+        p1.run(screen,space,sidebar)                    # Run everyting with player (draw, calc pos, collision etc.)
+        p2.run(screen,space,sidebar)
 
 
 

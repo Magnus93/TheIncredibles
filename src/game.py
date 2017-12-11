@@ -20,10 +20,19 @@ class local_game:
 		for p in player_list:
 			if p.id == my_id:
 				p.run(self.screen, self.space, self.sidebar)
+<<<<<<< HEAD
 				player_list[my_id] = p 
 			else:
 				p.draw(self.screen, self.space, self.sidebar)
 
+=======
+
+			else:
+				if p.lives >0:
+					p.draw(self.screen, self.space, self.sidebar)
+				
+        
+>>>>>>> Nea
 		self.screen.blit(self.space, (0,0))
 		self.screen.blit(self.sidebar, (600,0))
 		self.mytimer.tick(60)                            # Keep while loop at 60 loops/sec
