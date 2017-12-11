@@ -44,7 +44,7 @@ class player:
             self.check_wall_collision()
             self.draw(screen, space, sidebar)
         for s in self.bullets:
-            s.run()
+            s.run(space)
             pos = s.position
             if pos[0] < 0 or pos[1] < 0 or 600 < pos[0] or 600 < pos[1]:
                     self.bullets.remove(s)
@@ -112,6 +112,8 @@ class player:
             aux.draw_polygon(space, self.position, shape, self.angle, self.color)
             aux.draw_polygon(space, self.position, shape, self.angle, (255,255,255), 1)
             self.draw_player_stats(sidebar, (0, self.id*50))
+        for b in self.bullets:
+            b.draw(space)
 
     def draw_player_stats(self, surface, pos):
         name_text = font.render(self.name, 1, self.color)
@@ -178,8 +180,8 @@ if __name__ == '__main__':
         space.fill((51,51,51))
         sidebar.fill((26,26,26))
 
-        p1.run()                    # Run everyting with player (draw, calc pos, collision etc.)
-        p2.run()
+        p1.run(screen,space,sidebar)                    # Run everyting with player (draw, calc pos, collision etc.)
+        p2.run(screen,space,sidebar)
 
 
 
