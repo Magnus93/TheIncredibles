@@ -2,7 +2,7 @@ import pygame
 import math
 
 class bullet:
-    def __init__(self, position, angle, color, surface):
+    def __init__(self, position, angle, color):
         self.position = position
         self.angle = angle
         self.speed = 1.5
