@@ -5,6 +5,7 @@ import pickle
 from collections import defaultdict
 from player import *
 import gamelogic
+import time
 
 class serverUDP(SocketServer.BaseRequestHandler):
 
@@ -72,12 +73,27 @@ class serverUDP(SocketServer.BaseRequestHandler):
                 p.bullets = unpickled_data.bullets
                 
 
-        if self.check_collision(gl.player_list[0], gl.player_list[1]):
-            if not gl.player_list[0].immortal:
-                print ("krokc")
-                gl.player_list[0].lives -=1
-                if not gl.player_list[1].immortal:
-                    gl.player_list[1].lives -=1
+        for p1 in gl.player_list:
+            for p2 in gl.player_list:
+                if p1 != p2:
+                    if self.check_collision(p1, p2):
+                        if not p1.immortal:
+                            p1.immortal = True
+                            p1.lives -=1
+                            p1.immortal_counter = time.time() 
+                        if not p2.immortal:
+                            p2.immortal = True
+                            p2.lives -=1
+                            p2.immortal_counter = time.time()
+                    if self.check_shot(p1,p2):
+                        if not p2.immortal:
+                            p2.immortal = True
+                            p2.lives -=1
+                            p2.immortal_counter = time.time()
+                if p2.immortal_counter - time.time() < -10:
+                    p2.immortal = False
+            if p1.immortal_counter - time.time() < -10:
+                p1.immortal = False
             ####Set immortal och immortal_timer#############
             ############################################
         
@@ -93,15 +109,14 @@ class serverUDP(SocketServer.BaseRequestHandler):
             #print address_list[k]
             #send all players not just data.upper
             if addr:
-
                 socket.sendto(players_pickled, addr)  #data.upper()
 
-    def remove_dead_player(self, player_list):
-        for key in gl.player_list.copy().iterkeys():
-            player = gl.player_list[key]
-            if (player.lives < 1):
-                del gl.player_list[key]
-        return gl.player_list
+    #def remove_dead_player(self, player_list):
+    #    for key in gl.player_list.copy().iterkeys():
+    #        player = gl.player_list[key]
+    #        if (player.lives < 1):
+    #            del gl.player_list[key]
+    #    return gl.player_list
 
 
 
@@ -112,11 +127,15 @@ class serverUDP(SocketServer.BaseRequestHandler):
         if distance < p1.radius+p2.radius:
            return True
         return False
-            #tmp_speed = p1.speed
-            #p1.speed = p2.speed
-            #p2.speed = tmp_speed
-            #p1.take_damage()
-            #p2.take_damage()
+    
+    def check_shot(self, p1, p2):
+        for b in p1.bullets:
+            x_distance = b.position[0] - p2.position[0]
+            y_distance = b.position[1] - p2.position[1]
+            distance = math.sqrt(x_distance**2 + y_distance**2)
+            if distance < p2.radius*2:
+                return True
+            return False    
 
 
 def start_server():

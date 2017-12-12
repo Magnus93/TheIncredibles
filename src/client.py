@@ -75,7 +75,7 @@ class client:
             self.send_player()
             
             self.receive_players()
-            
+            print self.player.lives
             self.local_game.run(self.list_of_players, self.player.id)
             self.player = self.list_of_players[self.player.id]
 
@@ -109,8 +109,8 @@ class client:
                     print str(self.list_of_players[pl.id].angle)
                     #if not self.immortal:
                      #   self.list_of_players[pl.id].lives = unpickled_list[pl.id].lives
-                if not unpickled_list[pl.id].immortal:
-                    self.list_of_players[pl.id].lives = unpickled_list[pl.id].lives
+                
+                self.list_of_players[pl.id].lives = unpickled_list[pl.id].lives
         
         #for lp in self.list_of_players:
          #   print str(lp.position)

@@ -49,10 +49,10 @@ class player:
             if pos[0] < 0 or pos[1] < 0 or 600 < pos[0] or 600 < pos[1]:
                     self.bullets.remove(s)
                     del(s)
-        if self.immortal:
-            self.immortal_counter -= 1
-        if self.immortal_counter == 0:
-            self.immortal = False
+        #if self.immortal:
+         #   self.immortal_counter -= 1
+        #if self.immortal_counter == 0:
+         #   self.immortal = False
 
     def get_input(self):
         self.inpt.run()
@@ -102,16 +102,15 @@ class player:
                 self.position = (self.position[0], upper_limit)
 
     def draw(self, screen, space, sidebar):
-        if (self.immortal_counter/10)%2 == 0:
-            self.pos = (int(self.position[0]), int(self.position[1]))
-            pygame.draw.circle(space, (70,70,70), self.pos, self.radius, 1)
-            if self.boost:
-                shape = [(-3,6),(-5,12),(-2,9),(0,12),(2,9),(5,12),(3,6)]
-                aux.draw_polygon(space, self.position, shape, self.angle, (255,255,0))
-            shape = [(0,-10),(-5,6),(5,6)]
-            aux.draw_polygon(space, self.position, shape, self.angle, self.color)
-            aux.draw_polygon(space, self.position, shape, self.angle, (255,255,255), 1)
-            self.draw_player_stats(sidebar, (0, self.id*50))
+        self.pos = (int(self.position[0]), int(self.position[1]))
+        pygame.draw.circle(space, (70,70,70), self.pos, self.radius, 1)
+        if self.boost:
+            shape = [(-3,6),(-5,12),(-2,9),(0,12),(2,9),(5,12),(3,6)]
+            aux.draw_polygon(space, self.position, shape, self.angle, (255,255,0))
+        shape = [(0,-10),(-5,6),(5,6)]
+        aux.draw_polygon(space, self.position, shape, self.angle, self.color)
+        aux.draw_polygon(space, self.position, shape, self.angle, (255,255,255), 1)
+        self.draw_player_stats(sidebar, (0, self.id*50))
         for b in self.bullets:
             b.draw(space)
 
@@ -131,39 +130,39 @@ class player:
     def die(self):
         self.position = (-10,0)
 
-    def take_damage(self):
-        # Lock must be set on server
-        # self.immortal is Lock
-        self.immortal = True
-        self.immortal_counter = 60
-        self.lives -= 1
-        if self.lives < 1:
-            self.die()
+    #def take_damage(self):
+    #    # Lock must be set on server
+    #    # self.immortal is Lock
+    #    self.immortal = True
+    #    self.immortal_counter = 60
+    #    self.lives -= 1
+    #    if self.lives < 1:
+    #        self.die()
 
-    def check_hit_from_other(self, other_player):
-        player_pos = self.position
-        for bullet in other_player.bullets:
-            bullet_pos = bullet.position
-            if player_pos[0]-self.radius < bullet_pos[0] < player_pos[0]+self.radius:
-                if player_pos[1]-self.radius < bullet_pos[1] < player_pos[1]+self.radius:
-                    if not self.immortal:
-                        other_player.bullets.remove(bullet)
-                        self.take_damage()
-                        return True
-        return False
-
-    def check_collision(self, other_player):
-        x_distance = self.position[0] - other_player.position[0]
-        y_distance = self.position[1] - other_player.position[1]
-        distance = math.sqrt(x_distance**2 + y_distance**2)
-        if distance < self.radius+other_player.radius:
-            tmp_speed = self.speed
-            self.speed = other_player.speed
-            other_player.speed = tmp_speed
-            self.take_damage()
-            other_player.take_damage()
-            return True
-        return False
+    #def check_hit_from_other(self, other_player):
+    #    player_pos = self.position
+    #    for bullet in other_player.bullets:
+    #        bullet_pos = bullet.position
+    #        if player_pos[0]-self.radius < bullet_pos[0] < player_pos[0]+self.radius:
+    #            if player_pos[1]-self.radius < bullet_pos[1] < player_pos[1]+self.radius:
+    #                if not self.immortal:
+    #                    other_player.bullets.remove(bullet)
+    #                    self.take_damage()
+    #                    return True
+    #    return False
+#
+#    #def check_collision(self, other_player):
+#    #    x_distance = self.position[0] - other_player.position[0]
+#    #    y_distance = self.position[1] - other_player.position[1]
+#    #    distance = math.sqrt(x_distance**2 + y_distance**2)
+#    #    if distance < self.radius+other_player.radius:
+#    #        tmp_speed = self.speed
+#    #        self.speed = other_player.speed
+#    #        other_player.speed = tmp_speed
+#    #        self.take_damage()
+#    #        other_player.take_damage()
+#    #        return True
+    #    return False
 
 
 
