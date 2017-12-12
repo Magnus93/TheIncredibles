@@ -38,26 +38,11 @@ class serverUDP(SocketServer.BaseRequestHandler):
     # handle(self): keeps the connection alive, adds
     def handle(self):
         data = self.request[0].strip()
-        
+
         unpickled_data= pickle.loads(data)
 
 
         if unpickled_data.id == -1:
-<<<<<<< HEAD
-            self.handle_join(unpickled_data)
-        elif gl.players_taken == [True]*gl.num_player:
-            print "Game running on server"
-            # Handle_game_running(unpickled_data)
-            #gl.player_list[unpickled_data.id] = unpickled_data  # <------ This fucks up?
-            # ----- Check collisions for gl.player_list
-
-        print "Players in game now: "
-        for p in gl.player_list:
-            print p
-
-        socket = self.request[1]
-
-=======
             for i in range(0,len(gl.players_taken)):
                 if not gl.players_taken[i]:
                     break
@@ -70,17 +55,17 @@ class serverUDP(SocketServer.BaseRequestHandler):
                 gl.players_taken[i] = True
                 for p in gl.player_list:
                     print "id "+str(p.id)
-                    
+
               #  gl.player_list[i] = gl.players[i]
-                gl.player_list[i].name = unpickled_data.name 
+                gl.player_list[i].name = unpickled_data.name
                 #print "i is "+str(i)
                 gl.player_list[i].id = i
                 #print ""
-                #print str(i)    
-                address_list[i] = self.client_address 
+                #print str(i)
+                address_list[i] = self.client_address
         #print "in my player list now: "
         #for p in gl.player_list:
-         #   print p 
+         #   print p
         #gl.player_list[unpickled_data.id] = unpickled_data
 
         socket = self.request[1]
@@ -97,14 +82,14 @@ class serverUDP(SocketServer.BaseRequestHandler):
         #print address_list
 
         #self.remove_dead_player(player_list)
-        
+
 
         for p in gl.player_list:
             if unpickled_data.id == p.id:
                 p.position = unpickled_data.position
                 p.angle = unpickled_data.angle
                 p.bullets = unpickled_data.bullets
-                
+
 
         if self.check_collision(gl.player_list[0], gl.player_list[1]):
             if not gl.player_list[0].immortal:
@@ -114,9 +99,8 @@ class serverUDP(SocketServer.BaseRequestHandler):
                     gl.player_list[1].lives -=1
             ####Set immortal och immortal_timer#############
             ############################################
-        
 
->>>>>>> Nea
+
         players_pickled = pickle.dumps(gl.player_list)
 
         for addr in address_list:

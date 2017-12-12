@@ -2,94 +2,91 @@ import socket
 import sys
 import pickle
 from collections import defaultdict
-from player import *
-import game
+import player
+import game_client
+import packet
 
 #source: https://pymotw.com/2/socket/udp.html
 # Create a UDP socket
 
+
 start = False
 class client:
     def __init__(self):
-        self.num_player = 2
+        self.num_players = None
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.server_address = ('localhost', 8080)
         self.game_started = False
     #change when logic for creating a player from user input is ready,
     #asking for id now to be able to test the connection for several players
-        self.player = None
+        self.player_id = None
         self.list_of_players = None
-        self.local_game = game.local_game()
+        self.local_game = game_client.local_game()
 
     def setup_player(self):
         name = raw_input("Name: ")
-        self.player = player(-1, (300,300), (255,255,255), name)
-        self.list_of_players = [None]*self.num_player
-        self.list_of_players[self.player.id] = self.player
+        request_pack = packet.join_request(name)
+        self.send_packet(request_pack)
+        print "Waiting to join game..."
+        answer_packet = self.receive_packet()
+        if answer_packet.get_type() == "join_reply":
+            data = answer_packet.get_data()
+            if data["answer"]:
+                print "Congrats "+ name +" you are in the game."
+                print "Your ID: \t"+ str(data["id"])
+                print "Your Color: \t"+ str(data["color"])
+                print "Your Pos: \t"+ str(data["position"])
+                print "# of players\t"+str(data["num_players"])
+                me_player = player.player(data["id"], data["position"], data["color"], name)
+                self.num_players = data["num_players"]
+                self.list_of_players = [None]*self.num_players
+                self.list_of_players[data["id"]] = me_player
+                self.player_id = data["id"]
+                return True
+            else:
+                print "The game is full. Better luck next time."
+                return False
 
     def start_client(self):
         #client_for_player = client();
+        print "Client started"
 
+        print "Waiting for others players to join..."
+        in_lobby = True
+        while(in_lobby):
+            pack = self.receive_packet()
+            if pack.get_type() == "initial_other_player":
+                data = pack.get_data()
+                print "\nreceived new player:"+str(data["color"]) + str(data["id"]) + str(data["name"])
+                playr = player.player(data["id"], data["position"], data["color"], data["name"])
+                playr.angle = data["angle"]
+                self.list_of_players[data["id"]] = playr
+            elif pack.get_type() == "starting_game":
+                in_lobby = False
 
+        self.local_game.start_game()
+        print "local game started"
+        in_game = True
+        while(in_game):
+            self.local_game.run(self.list_of_players, self.player_id)
 
-
-        # Join game
-        joined = False
-        while(not joined):
-            try:
-                #print "Sending player"
-                self.send_player()
-
-
-                self.receive_players()
-                if self.player.id == -1:
-                    for p in self.list_of_players:
-                        if p.name == self.player.name:
-                            self.player.id = p.id
-                            self.player.position = p.position
-                            joined = True
-
-                            if self.player.id == self.num_player-1:
-                                self.game_started = True
-
-                #uncomment the line below to avoid an infinite loop
-                #self.player.lives = self.player.lives - 1
-
-
-            except KeyboardInterrupt:
-                raise
-
-        # Wainting for everyone to join
-        if self.game_started == False:
-            while (not self.game_started):
-                self.receive_players()
-                if self.list_of_players[-1].name != "player"+str(self.num_player-1):
-                    self.game_started = True
-
-
-        # Run Game
-        while True:
-            #print "Game starting"
-            start = True
-            self.send_player()
-
-            self.receive_players()
-
-            self.local_game.run(self.list_of_players, self.player.id)
-            self.player = self.list_of_players[self.player.id]
-
-
-
-        print("player is dead")
-        self.send_player()
+        #self.send_player()
         self.sock.close()
+        print "sock closed"
+
+    def send_packet(self, pack):
+        pickle_pack = pickle.dumps(pack)
+        self.sock.sendto(pickle_pack, self.server_address)
+
+    def receive_packet(self):
+        pickle_pack, server = self.sock.recvfrom(4096)
+        pack = pickle.loads(pickle_pack)
+        print pack
+        return pack
 
     def send_player(self):
-        #self.player.update_position()
-        print str(self.player.bullets)
         data = pickle.dumps(self.player)
         self.sock.sendto(data, self.server_address)
-        #print >>sys.stderr, 'sent player to server'
 
     def receive_players(self):
         #print >>sys.stderr, 'waiting to receive'
@@ -111,16 +108,13 @@ class client:
                 if not unpickled_list[pl.id].immortal:
                     self.list_of_players[pl.id].lives = unpickled_list[pl.id].lives
 
-        #for lp in self.list_of_players:
-         #   print str(lp.position)
-        #print str(list_of_players[0])+str( list_of_players[1])+str(list_of_players[2]) +str(list_of_players[3])+"\n"
 
+if __name__ == '__main__':
+    client_for_player = client()
 
-
-
-
-
-
-client_for_player = client()
-client_for_player.setup_player()
-client_for_player.start_client()
+    if client_for_player.setup_player():
+        print "Accepted into game!"
+        client_for_player.start_client()
+    else:
+        pass
+    print "Bye"

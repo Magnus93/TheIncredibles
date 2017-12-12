@@ -6,20 +6,18 @@ import player
 ID_REQUEST_JOIN = -1
 
 class gamelogic:
-
-
     def __init__(self):
 
-        self.num_player = 2
+        self.num_players = 2
         p1 = player.player(0,(20,20),(255,0,0) ,"player0")
         p2 = player.player(1,(780,780),(0,255,0) ,"player1")
         p3 = player.player(2,(20,40),(0,0,255) ,"player2")
         p4 = player.player(3,(40,40),(255,0,255),"player3")
-        
-        self.player_list = [p1,p2,p3,p4]
-        self.player_list = self.player_list[:self.num_player]
-        self.players_taken = [False]*self.num_player
 
+        self.player_list = [p1,p2,p3,p4]
+        self.player_list = self.player_list[:self.num_players]
+        self.players_taken = [False]*self.num_players
+        self.game_started = False
 
 def initiate_player_and_send():
     for i in range(0,len(players_taken)):
