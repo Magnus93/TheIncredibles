@@ -1,6 +1,7 @@
 import pygame
 import sys
 import player
+import powerup
 #import client
 
 pygame.font.init()
@@ -14,6 +15,7 @@ class local_game:
 		self.mytimer = pygame.time.Clock()                       # Create Clock
 
 	def run(self, player_list, my_id):
+		
 		self.screen.fill((26,26,26))
 		self.space.fill((51,51,51))
 		self.sidebar.fill((26,26,26))

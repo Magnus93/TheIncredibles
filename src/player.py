@@ -38,8 +38,8 @@ class player:
 
     # Top function that runs all other functions
     def run(self, screen, space, sidebar):
-        self.get_input()
         if self.lives > 0:
+            self.get_input()
             self.update_position()
             self.check_wall_collision()
             self.draw(screen, space, sidebar)

@@ -11,7 +11,7 @@ import game
 start = False
 class client:
     def __init__(self):
-        self.num_player = 2
+        self.num_player = 3
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.server_address = ('130.238.246.115', 8080)
         self.game_started = False
@@ -106,7 +106,6 @@ class client:
                 if pl.id != self.player.id:
                     
                     self.list_of_players[pl.id] = unpickled_list[pl.id]
-                    print str(self.list_of_players[pl.id].angle)
                     #if not self.immortal:
                      #   self.list_of_players[pl.id].lives = unpickled_list[pl.id].lives
                 

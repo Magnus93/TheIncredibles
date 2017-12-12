@@ -71,6 +71,7 @@ class serverUDP(SocketServer.BaseRequestHandler):
                 p.position = unpickled_data.position
                 p.angle = unpickled_data.angle
                 p.bullets = unpickled_data.bullets
+                p.boost = unpickled_data.boost
                 
 
         for p1 in gl.player_list:
@@ -90,9 +91,9 @@ class serverUDP(SocketServer.BaseRequestHandler):
                             p2.immortal = True
                             p2.lives -=1
                             p2.immortal_counter = time.time()
-                if p2.immortal_counter - time.time() < -10:
+                if p2.immortal_counter - time.time() < -2:
                     p2.immortal = False
-            if p1.immortal_counter - time.time() < -10:
+            if p1.immortal_counter - time.time() < -2:
                 p1.immortal = False
             ####Set immortal och immortal_timer#############
             ############################################
