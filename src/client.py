@@ -13,7 +13,7 @@ class client:
     def __init__(self):
         self.num_player = 2
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.server_address = ('localhost', 8080)
+        self.server_address = ('130.238.246.115', 8080)
         self.game_started = False
     #change when logic for creating a player from user input is ready,
     #asking for id now to be able to test the connection for several players

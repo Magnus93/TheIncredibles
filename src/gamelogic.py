@@ -13,8 +13,8 @@ class gamelogic:
         self.num_player = 2
         p1 = player.player(0,(20,20),(255,0,0) ,"player0")
         p2 = player.player(1,(780,780),(0,255,0) ,"player1")
-        p3 = player.player(2,(20,40),(0,0,255) ,"player2")
-        p4 = player.player(3,(40,40),(255,0,255),"player3")
+        p3 = player.player(2,(20,780),(0,0,255) ,"player2")
+        p4 = player.player(3,(780,20),(255,0,255),"player3")
         
         self.player_list = [p1,p2,p3,p4]
         self.player_list = self.player_list[:self.num_player]
