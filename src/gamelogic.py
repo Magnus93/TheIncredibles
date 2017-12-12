@@ -10,7 +10,7 @@ class gamelogic:
 
     def __init__(self):
 
-        self.num_player = 2
+        self.num_player = 3
         p1 = player.player(0,(20,20),(255,0,0) ,"player0")
         p2 = player.player(1,(780,780),(0,255,0) ,"player1")
         p3 = player.player(2,(20,780),(0,0,255) ,"player2")
