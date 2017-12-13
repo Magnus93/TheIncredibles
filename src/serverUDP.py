@@ -146,7 +146,7 @@ def start_server():
     #new= MyUDPHandler()
     gl = gamelogic.gamelogic()
     address_list=[None]*gl.num_player
-    HOST, PORT = "130.238.246.236", 8080
+    HOST, PORT = "130.238.245.70", 9999
     server = SocketServer.UDPServer((HOST, PORT), serverUDP)
     server.serve_forever()
 
