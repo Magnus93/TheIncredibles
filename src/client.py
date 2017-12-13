@@ -11,9 +11,9 @@ import game
 start = False
 class client:
     def __init__(self):
-        self.num_player = 3
+        self.num_player = 4
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.server_address = ('130.238.246.115', 8080)
+        self.server_address = ('130.238.246.236', 8080)
         self.game_started = False
     #change when logic for creating a player from user input is ready,
     #asking for id now to be able to test the connection for several players
